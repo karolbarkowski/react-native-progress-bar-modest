@@ -1,3 +1,8 @@
+# react-native-progress-bar-modest
+
+Simple, animated progress bar for React Native.
+![](http://imgur.com/a/p2Kin)
+
 ## Installation
 `npm install react-native-progress-bar-modest`
 
