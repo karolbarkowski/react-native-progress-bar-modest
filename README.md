@@ -1,1 +1,3 @@
-# react-native-progress-bar-modest
+## Installation
+
+  `npm install react-native-progress-bar-modest`
