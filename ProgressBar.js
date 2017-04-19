@@ -18,10 +18,6 @@ export default class ProgressBarMini extends React.Component {
         };
     }
 
-    getValue() {
-        return this.state.value;
-    }
-
     setValue(_value) {
         if (_value < 0) _value = 0;
         if (_value > 100) _value = 100;
@@ -37,8 +33,14 @@ export default class ProgressBarMini extends React.Component {
             _self.reachedWidth,
             {
                 toValue: _reachedWidth,
-                duration: 150
+                duration: 300,
             }).start();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.value != prevProps.value) {
+            this.setValue(this.props.value);
+        }
     }
 
     onLayout(event) {
@@ -55,13 +57,23 @@ export default class ProgressBarMini extends React.Component {
                 <Animated.View
                     style={[styles.reached, {
                         width: this.reachedWidth,
-                        backgroundColor: this.props.reachedColor
+                        height: this.props.reachedBarHeight,
+                        backgroundColor: this.props.reachedBarColor,
+                        borderTopLeftRadius: this.props.borderRadius,
+                        borderBottomLeftRadius: this.props.borderRadius
                     }]}>
                 </Animated.View>
-                    <Text style={[styles.value, { color: this.props.reachedColor }]}>
-                        {this.state.value}
-                    </Text>
-                <View style={[styles.unreached, { backgroundColor: this.props.unreachedColor }]}></View>
+                <Text style={[styles.value, { color: this.props.reachedBarColor }]}>
+                    {this.state.value}
+                </Text>
+                <View style={[styles.unreached, {
+                    backgroundColor: this.props.unreachedBarColor,
+                    height: this.props.unreachedBarHeight,
+                    borderTopRightRadius: this.props.borderRadius,
+                    borderBottomRightRadius: this.props.borderRadius
+                }]}>
+
+                </View>
             </View>
         );
     }
@@ -73,7 +85,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     reached: {
-        height: 2,
     },
     unreached: {
         flex: 1,
@@ -88,12 +99,18 @@ const styles = StyleSheet.create({
 
 ProgressBarMini.propTypes = {
     value: React.PropTypes.number,
-    reachedColor: React.PropTypes.string,
-    unreachedColor: React.PropTypes.string,
+    borderRadius: React.PropTypes.number,
+    reachedBarHeight: React.PropTypes.number,
+    unreachedBarHeight: React.PropTypes.number,
+    reachedBarColor: React.PropTypes.string,
+    unreachedBarColor: React.PropTypes.string,
 }
 
 ProgressBarMini.defaultProps = {
     value: 0,
-    reachedColor: '#5E8CAD',
-    unreachedColor: '#CFCFCF'
+    borderRadius: 0,
+    reachedBarColor: '#5E8CAD',
+    reachedBarHeight: 2,
+    unreachedBarColor: '#CFCFCF',
+    unreachedBarHeight: 1,
 };
