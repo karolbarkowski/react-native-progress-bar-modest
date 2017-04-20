@@ -7,37 +7,34 @@ export default class ReactNativeProgressBarModest extends Component {
     super(props);
 
     this.state = {
-      val1: 0,
-      val2: 0,
-      val3: 0,
+      val1: 25,
+      val2: 50,
+      val3: 75,
     };
 
     const _self = this;
 
     setInterval(() => {
       _self.setState({
-        val1: Math.floor(Math.random() * 100)
-      });
-    }, 1000);
-
-    setInterval(() => {
-      _self.setState({
-        val2: Math.floor(Math.random() * 100)
-      });
-    }, 1200);
-
-    setInterval(() => {
-      _self.setState({
+        val1: Math.floor(Math.random() * 100),
+        val2: Math.floor(Math.random() * 100),
         val3: Math.floor(Math.random() * 100)
       });
-    }, 1400);
+    }, 1000);
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <ProgressBar reachedBarColor='#5E8AAD' style={{ margin: 20 }} value={this.state.val1} showValue={false} />
         <ProgressBar reachedBarColor='#5E8AAD' style={{ margin: 20 }} value={this.state.val1} />
-        <ProgressBar reachedBarColor='#769F1B' style={{ margin: 20 }} value={this.state.val2} reachedBarHeight={5} unreachedBarHeight={5} />
+
+        <ProgressBar reachedBarColor='#769F1B' style={{ margin: 20 }} value={this.state.val2} showValue={false} reachedBarHeight={6} unreachedBarHeight={6} />
+        <ProgressBar reachedBarColor='#769F1B' style={{ margin: 20 }} value={this.state.val2} reachedBarHeight={6} unreachedBarHeight={6} />
+        <ProgressBar reachedBarColor='#769F1B' style={{ margin: 20 }} value={this.state.val2} reachedBarHeight={6} unreachedBarHeight={6} borderRadius={3} />
+
+        <ProgressBar reachedBarColor='#EA7444' style={{ margin: 20 }} value={this.state.val3} showValue={false} reachedBarHeight={20} unreachedBarHeight={20} />
+        <ProgressBar reachedBarColor='#EA7444' style={{ margin: 20 }} value={this.state.val3} reachedBarHeight={20} unreachedBarHeight={20} />
         <ProgressBar reachedBarColor='#EA7444' style={{ margin: 20 }} value={this.state.val3} reachedBarHeight={20} unreachedBarHeight={20} borderRadius={10} />
       </View>
     );

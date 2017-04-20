@@ -4,17 +4,35 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 const VALUE_SIZE = 25;
 
 export default class ProgressBarMini extends React.Component {
+    static propTypes = {
+        value: React.PropTypes.number,
+        borderRadius: React.PropTypes.number,
+        reachedBarHeight: React.PropTypes.number,
+        unreachedBarHeight: React.PropTypes.number,
+        reachedBarColor: React.PropTypes.string,
+        unreachedBarColor: React.PropTypes.string,
+        showValue: React.PropTypes.bool
+    }
+
+    static defaultProps = {
+        value: 0,
+        borderRadius: 0,
+        reachedBarColor: '#5E8CAD',
+        reachedBarHeight: 2,
+        unreachedBarColor: '#CFCFCF',
+        unreachedBarHeight: 1,
+        showValue: true
+    };
+
     constructor(props) {
         super(props);
         this.onLayout = this.onLayout.bind(this);
         this.setValue = this.setValue.bind(this);
 
-        let _value = this.props.value;
-        if (_value < 0) _value = 0;
-        if (_value > 100) _value = 100;
+        this.reachedWidth = new Animated.Value(0);
 
         this.state = {
-            value: _value
+            value: 0
         };
     }
 
@@ -22,11 +40,11 @@ export default class ProgressBarMini extends React.Component {
         if (_value < 0) _value = 0;
         if (_value > 100) _value = 100;
 
-        const _reachedWidth = ((this.width - VALUE_SIZE) * _value) / 100;
-
         this.setState({
             value: _value
         });
+
+        const _reachedWidth = ((this.width - VALUE_SIZE) * _value) / 100;
 
         const _self = this;
         Animated.timing(
@@ -37,6 +55,13 @@ export default class ProgressBarMini extends React.Component {
             }).start();
     }
 
+    componentDidMount() {
+        this.reachedWidth.addListener(({ value }) => {
+            const w = this.reachedWidth.__getValue();
+            this.refReachedBarView.setNativeProps({ style: { width: w } });
+        });
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (this.props.value != prevProps.value) {
             this.setValue(this.props.value);
@@ -44,28 +69,32 @@ export default class ProgressBarMini extends React.Component {
     }
 
     onLayout(event) {
-        const _width = event.nativeEvent.layout.width;
-        const _reachedWidth = ((_width - VALUE_SIZE) * this.state.value) / 100;
+        console.log("ON LAYOUT");
 
-        this.width = _width;
-        this.reachedWidth = new Animated.Value(_reachedWidth)
+        this.width = event.nativeEvent.layout.width;
+        this.setValue(this.props.value);
     }
 
     render() {
+        console.log("RENDER");
+        const valueText = this.props.showValue
+            ? (<Text style={[styles.value, { color: this.props.reachedBarColor }]}>
+                {this.state.value}
+            </Text>)
+            : null;
+
         return (
             <View onLayout={this.onLayout} style={[styles.container, this.props.style]}>
-                <Animated.View
-                    style={[styles.reached, {
-                        width: this.reachedWidth,
+                <View
+                    ref={component => this.refReachedBarView = component}
+                    style={{
                         height: this.props.reachedBarHeight,
                         backgroundColor: this.props.reachedBarColor,
                         borderTopLeftRadius: this.props.borderRadius,
                         borderBottomLeftRadius: this.props.borderRadius
-                    }]}>
-                </Animated.View>
-                <Text style={[styles.value, { color: this.props.reachedBarColor }]}>
-                    {this.state.value}
-                </Text>
+                    }}>
+                </View>
+                {valueText}
                 <View style={[styles.unreached, {
                     backgroundColor: this.props.unreachedBarColor,
                     height: this.props.unreachedBarHeight,
@@ -84,11 +113,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    reached: {
-    },
     unreached: {
         flex: 1,
-        height: 1,
     },
     value: {
         fontSize: 11,
@@ -96,21 +122,3 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 })
-
-ProgressBarMini.propTypes = {
-    value: React.PropTypes.number,
-    borderRadius: React.PropTypes.number,
-    reachedBarHeight: React.PropTypes.number,
-    unreachedBarHeight: React.PropTypes.number,
-    reachedBarColor: React.PropTypes.string,
-    unreachedBarColor: React.PropTypes.string,
-}
-
-ProgressBarMini.defaultProps = {
-    value: 0,
-    borderRadius: 0,
-    reachedBarColor: '#5E8CAD',
-    reachedBarHeight: 2,
-    unreachedBarColor: '#CFCFCF',
-    unreachedBarHeight: 1,
-};
