@@ -62,6 +62,7 @@ AppRegistry.registerComponent('ProgressBarMinimal', () => ProgressBarMinimal);
 | Prop | Description | Default |
 |---|---|---|
 |**`value`**|Current progress value. Ranges from `0..100`.|0|
+|**`showValue`**|Shows numeric progress value if set to true.|true|
 |**`borderRadius`**|Border radius of progress bar.|0|
 |**`reachedBarColor`**|Color of the left side of progress bar. Must be a valid React Native color string.|`#5E8CAD`|
 |**`reachedBarHeight`**|Height of the left side of progress bar.|`2`|
