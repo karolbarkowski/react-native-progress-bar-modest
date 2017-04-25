@@ -6,7 +6,7 @@ Inspired by this native Android component: https://android-arsenal.com/details/1
 ![](https://i.imgur.com/VE5eXNt.gif)
 
 ## Installation
-`npm install react-native-progress-bar-modest`
+`npm install --save react-native-progress-bar-modest`
 
 
 ## Example usage
